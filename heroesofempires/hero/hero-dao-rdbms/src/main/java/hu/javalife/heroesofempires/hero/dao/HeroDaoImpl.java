@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,10 +22,12 @@ public class HeroDaoImpl implements HeroDao{
     private EntityManager em;
     
     
+    @Override
     public Hero getById(long pId){
         return em.find(Hero.class, pId);
     }
     
+    @Override
     public boolean isNameAvailable(String pName){
         return em.createNamedQuery("Hero.name")
                 .setParameter("name", pName)
@@ -34,16 +35,19 @@ public class HeroDaoImpl implements HeroDao{
                 .isEmpty();
     }
 
+    @Override
     public Hero getByName(String pName){
         return (Hero) em.createNamedQuery("Hero.name").setParameter("name", pName).getSingleResult();
     }
     
     
+    @Override
     public List<Hero> getAll(){
         return em.createQuery("SELECT h FROM Hero h").getResultList();
     }
     
     
+    @Override
     public Hero modify(long pId, Hero pNewData){
         Hero hero = em.find(Hero.class, pId);
         hero.setName(pNewData.getName());
@@ -52,18 +56,21 @@ public class HeroDaoImpl implements HeroDao{
         return hero;
     }
 
+    @Override
     public void delete(long pId){
         Hero hero = em.find(Hero.class, pId);
         em.remove(hero);
     }
 
 
+    @Override
     public Hero add(Hero pNewData){
         System.out.println("DAO+"+pNewData.getName());
         em.persist(pNewData);
         return pNewData;
     }
 
+    @Override
     public List<Hero> get(int pStart, int pCount, Hero pSearch, String pShortField, String pShortDirection){
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Hero> query = builder.createQuery(Hero.class);
@@ -87,6 +94,7 @@ public class HeroDaoImpl implements HeroDao{
     }
     
     
+    @Override
     public long getItemCount(){
         CriteriaBuilder qb = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq = qb.createQuery(Long.class);
@@ -95,7 +103,7 @@ public class HeroDaoImpl implements HeroDao{
     }    
     
     protected List<Predicate> searchPredicates(Hero pSearch, CriteriaBuilder builder, Root root){
-        List<Predicate> predicates = new ArrayList<Predicate>();        
+        List<Predicate> predicates = new ArrayList<>();        
         if(pSearch!= null && pSearch.getName()!=null && !pSearch.getName().isEmpty()){
             predicates.add(
                 builder.like(

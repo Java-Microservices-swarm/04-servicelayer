@@ -17,12 +17,14 @@ public class HeroServiceImpl implements HeroService{
     @Inject
     HeroDao dao; 
     
+    @Override
     public Hero add(Hero pValue) throws BusinessException{
         if(dao.isNameAvailable(pValue.getName()))
             return dao.add(pValue);
         else throw new BusinessException();
     }
     
+    @Override
     public List<Hero> getAll(){return dao.getAll();}
     
     public Hero getById(long pID) throws BusinessException{
@@ -33,6 +35,7 @@ public class HeroServiceImpl implements HeroService{
             return hero;
     }
 
+    @Override
     public Hero getByName(String pName) throws BusinessException{
         Hero hero = dao.getByName(pName);
         if(hero==null)
@@ -41,6 +44,7 @@ public class HeroServiceImpl implements HeroService{
             return hero;
     }
     
+    @Override
     public Hero modify(long pID, Hero pHero) throws BusinessException{
         Hero hero = dao.getById(pID);
         if(hero == null)
@@ -50,6 +54,7 @@ public class HeroServiceImpl implements HeroService{
         return dao.modify(pID, pHero);
     }
     
+    @Override
     public void delete(long pID) throws BusinessException{
         Hero hero = dao.getById(pID);
         if(hero==null)
@@ -58,10 +63,12 @@ public class HeroServiceImpl implements HeroService{
             dao.delete(pID);
     }
     
+    @Override
     public List<Hero> search(int pStart, int pCount, Hero pPred, String pShortField, String pShortDirection){
         return dao.get(pStart, pCount, pPred, pShortField, pShortDirection);
     }
 
+    @Override
     public long getNumberOfHeroes(){
         return dao.getItemCount();
     }
